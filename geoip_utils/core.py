@@ -12,7 +12,20 @@ from .settings import CACHE_METHOD
 class GeoIPHandler(LazyObject):
 
     def _setup(self):
-        self._wrapped = GeoIP(cache=CACHE_METHOD)
+        self._wrapped = GeoIP(cache=self.cache_method)
+
+    @property
+    def cache_method(self):
+        if CACHE_METHOD == 'memory':
+            return GeoIP.GEOIP_MEMORY_CACHE
+        elif CACHE_METHOD == 'check':
+            return GeoIP.GEOIP_CHECK_CACHE
+        elif CACHE_METHOD == 'index':
+           return GeoIP.GEOIP_INDEX_CACHE
+        elif CACHE_METHOD == 'mmap':
+           return GeoIP.GEOIP_MMAP_CACHE
+        else:
+           return GeoIP.GEOIP_STANDARD
 
 geoip = GeoIPHandler()
 
